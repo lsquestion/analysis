@@ -16,4 +16,11 @@ import pandas as pd;import numpy as np
 
 frame=DataFrame(records)
 
-print frame['tz'][:10]
+clean_tz=frame['tz'].fillna('Missing')
+clean_tz[clean_tz=='']="Unknown"
+
+
+tz_counts=clean_tz.value_counts()
+
+tz_counts[:10].plot(kind="barh",rot=0)
+print tz_counts[:10]
