@@ -8,4 +8,12 @@ f=open(path).readline()
 
 records=[json.loads(line) for line in open(path)]
 
-print records[0]
+#time_zones=[rec['tz'] for rec in records if 'tz' in rec]
+
+from pandas import DataFrame,Series
+
+import pandas as pd;import numpy as np 
+
+frame=DataFrame(records)
+
+print frame['tz'][:10]
