@@ -20,24 +20,27 @@ names=pd.concat(pieces,ignore_index=True)
 
 total_births=names.pivot_table('births',index='year',columns='sex',aggfunc=sum)
 
-names=names.groupby(['year','sex']).apply(add_prop)	
-
-np.allclose(names.groupby(['year','sex']).prop.sum(),1)
-
-grouped=names.groupby(['year','sex'])
-
-top1000=grouped.apply(get_top1000)
-
-print top1000
-
 def add_prop(group):
 	births=group.births.astype(float)
 
 	group['prop']=births/births.sum()
 	return group
 
+names=names.groupby(['year','sex']).apply(add_prop)	
+
+np.allclose(names.groupby(['year','sex']).prop.sum(),1)
+
+grouped=names.groupby(['year','sex'])
 
 def get_top1000(group):
-	return group.sort_index(by='birth',ascending=False)[:1000]
+	return group.sort_index(by='births',ascending=False)[:1000]
+
+top1000=grouped.apply(get_top1000)
+
+print top1000
+
+
+
+
 
 
