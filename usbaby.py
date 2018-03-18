@@ -48,10 +48,22 @@ subset=total_births[['John','Harry','Mary','Marilyn']]
 table=top1000.pivot_table('prop',index='year',columns='sex',aggfunc=sum)
 #table.plot(title='Sum of table1000.prop by year and sex',yticks=np.linspace(0,1.2,13),xticks=range(1880,2020,10))
 #plt.show()
-df=boys[boys.year==2010]
+#df=boys[boys.year==2010]
 
-prop_cumsum=df.sort_values(by='prop',ascending=False).prop.cumsum()
-print(prop_cumsum.searchsorted(0.5))
+#prop_cumsum=df.sort_values(by='prop',ascending=False).prop.cumsum()
+#print(prop_cumsum.searchsorted(0.5))
+#df=boys[boys.year==1900]
+#in1900=df.sort_values(by='prop',ascending=False).prop.cumsum()
+def get_quantitle_count(group,q=0.5):
+	group=group.sort_values(by="prop",ascending=False)
+	return group.prop.cumsum().searchsorted(q)[0]+1
+
+diversity=top1000.groupby(['year','sex']).apply(get_quantitle_count)
+diversity=diversity.unstack('sex')
+#print(diversity)
+
+diversity.plot(title="Number of popular names in top 50%")
+plt.show()
 
 
 
