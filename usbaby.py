@@ -25,9 +25,14 @@ objs: series，dataframe或者是panel构成的序列lsit
 axis： 需要合并链接的轴，0是行，1是列 
 join：连接的方式 inner，或者outer
 ignore_index:是否重建索引
+http://blog.csdn.net/stevenkwong/article/details/52528616
 '''
 total_births=names.pivot_table('births',index='year',columns='sex',aggfunc=sum)
 
+'''
+数据透视表
+http://blog.csdn.net/stevenkwong/article/details/52528616http://blog.csdn.net/stevenkwong/article/details/52528616
+'''
 def add_prop(group):
 	births=group.births.astype(float)
 
