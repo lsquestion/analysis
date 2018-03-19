@@ -17,7 +17,15 @@ for year in years:
 	pieces.append(frame)
 
 names=pd.concat(pieces,ignore_index=True)
-
+'''
+pd.concat(objs, axis=0, join='outer', join_axes=None, ignore_index=False,
+keys=None, levels=None, names=None, verify_integrity=False)
+参数说明 
+objs: series，dataframe或者是panel构成的序列lsit 
+axis： 需要合并链接的轴，0是行，1是列 
+join：连接的方式 inner，或者outer
+ignore_index:是否重建索引
+'''
 total_births=names.pivot_table('births',index='year',columns='sex',aggfunc=sum)
 
 def add_prop(group):
@@ -62,8 +70,42 @@ diversity=top1000.groupby(['year','sex']).apply(get_quantitle_count)
 diversity=diversity.unstack('sex')
 #print(diversity)
 
-diversity.plot(title="Number of popular names in top 50%")
-plt.show()
+#diversity.plot(title="Number of popular names in top 50%")
+#plt.show()
+get_last_letter=lambda x:x[-1]
 
+last_letters=names.name.map(get_last_letter)
+
+last_letters.name='last_letters'
+
+table=names.pivot_table('births',index=last_letters,columns=['sex','year'],aggfunc=sum)
+
+subtable=table.reindex(columns=[1910,1960,2010],level='year')
+#print(subtable.sum())
+letter_prop=subtable/subtable.sum().astype(float)
+import matplotlib.pyplot as plt
+
+#fig,axes=plt.subplots(2,1,figsize=(10,8))
+#letter_prop['M'].plot(kind='bar',rot=0,ax=axes[0],title='Male')
+#letter_prop['F'].plot(kind='bar',rot=0,ax=axes[1],title='Female',legend=False)
+letter_prop=table/table.sum().astype(float)
+dny_ts=letter_prop.ix[['d','n','y'],'M'].T
+#print(dny_ts.head())
+#dny_ts.plot()
+#plt.show()
+all_names=top1000.name.unique()
+mask=np.array(['lesl' in x.lower() for x in all_names])
+
+lesley_like=all_names[mask]
+
+filtered=top1000[top1000.name.isin(lesley_like)]
+
+filtered.groupby('name').births.sum()
+table=filtered.pivot_table('births',index='year',columns='sex',aggfunc='sum')
+table=table.div(table.sum(1),axis=0)
+
+table.plot(style={'M':'k-','F':'k--'})
+
+plt.show()
 
 
