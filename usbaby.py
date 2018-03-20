@@ -31,7 +31,7 @@ total_births=names.pivot_table('births',index='year',columns='sex',aggfunc=sum)
 
 '''
 数据透视表
-http://blog.csdn.net/stevenkwong/article/details/52528616http://blog.csdn.net/stevenkwong/article/details/52528616
+index指定行 columns 指定列
 '''
 def add_prop(group):
 	births=group.births.astype(float)
@@ -40,6 +40,12 @@ def add_prop(group):
 	return group
 
 names=names.groupby(['year','sex']).apply(add_prop)	
+'''
+根据groupby中的内容进行分组，如果有两个参数，则首先根据第一个参数分组，在分好的组中根据第二个参数分组
+mean是求平均数
+mean仅作用于指定的列
+apply作用于所有的列
+'''
 
 np.allclose(names.groupby(['year','sex']).prop.sum(),1)
 
